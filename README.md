@@ -269,13 +269,13 @@ part4_agent/fixtures/
 From the project root:
 
 ```powershell
-python part4_agent\mock_agent_runner.py
+python -m part4_agent.mock_agent_runner
 ```
 
 Run the Part 4 tests with:
 
 ```powershell
-pytest -q part4_agent\test_mock_agent_runner.py
+python -m pytest part4_agent/test_mock_agent_runner.py -v
 ```
 
 ## Part 4 behavior
@@ -436,13 +436,13 @@ python part3_narrative\verify_part3.py
 ## 5. Run Part 4
 
 ```powershell
-python part4_agent\mock_agent_runner.py
+python -m part4_agent.mock_agent_runner
 ```
 
 Then run the Part 4 tests:
 
 ```powershell
-pytest -q part4_agent\test_mock_agent_runner.py
+python -m pytest part4_agent/test_mock_agent_runner.py -v
 ```
 
 ---
