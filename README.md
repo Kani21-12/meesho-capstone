@@ -535,6 +535,6 @@ The following official Python documentation was consulted during implementation:
 * Python `csv` module documentation: https://docs.python.org/3/library/csv.html
 * Python `sqlite3` module documentation: https://docs.python.org/3/library/sqlite3.html
 * Python `json` module documentation: https://docs.python.org/3/library/json.html
-* Python `unittest` module documentation: https://docs.python.org/3/library/unittest.html
+* pytest documentation: https://docs.pytest.org/
 
 These references were used for implementation and standard-library behavior.
