@@ -478,51 +478,41 @@ Part 4 reuses the Part 2 guardrails and orchestrates the reporting workflow whil
 # Project Structure
 
 ```text
-MEESHO-CAPSTONE
-data/
-├── generate_dataset.py
-├── resellers.csv
-├── orders.csv
-└── meesho_reseller.db
-
-part1_sql/
-├── queries.sql
-├── run_queries.py
-└── output/
-    ├── monthly_category_revenue.csv
-    ├── region_revenue_orders.csv
-    ├── top_resellers.csv
-    ├── zero_order_resellers.csv
-    ├── zero_order_count_test.csv
-    └── june_delivered_aov.csv
-
-part2_engine/
-├── growth_engine.py
-├── show_results.py
-├── test_growth_engine.py
-└── fixtures/
-    ├── corrupted_feed.csv
-    └── monthly_category_revenue.csv
-
-part3_narrative/
-├── masking.py
-├── prompt_pack.md
-├── narrative_report.md
-└── verify_part3.py
-
-part4_agent/
-├── agent_spec.md
-├── create_fixtures.py
-├── mock_agent_runner.py
-├── test_mock_agent_runner.py
-└── fixtures/
-    ├── april.csv
-    ├── boundary_current.csv
-    ├── boundary_previous.csv
-    ├── june.csv
-    └── may.csv
-
-README.md
+MEESHO-CAPSTONE/
+├── data/
+│   ├── generate_dataset.py
+│   ├── resellers.csv
+│   ├── orders.csv
+│   └── meesho_reseller.db
+│
+├── part1_sql/
+│   ├── queries.sql
+│   ├── run_queries.py
+│   └── output/
+│       └── *.csv
+│
+├── part2_engine/
+│   ├── growth_engine.py
+│   ├── show_results.py
+│   ├── test_growth_engine.py
+│   └── fixtures/
+│       └── *.csv
+│
+├── part3_narrative/
+│   ├── masking.py
+│   ├── prompt_pack.md
+│   ├── narrative_report.md
+│   └── verify_part3.py
+│
+├── part4_agent/
+│   ├── agent_spec.md
+│   ├── create_fixtures.py
+│   ├── mock_agent_runner.py
+│   ├── test_mock_agent_runner.py
+│   └── fixtures/
+│       └── *.csv
+│
+└── README.md
 ```
 
 ---
