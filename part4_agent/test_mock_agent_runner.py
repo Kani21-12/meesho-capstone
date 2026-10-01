@@ -1,4 +1,3 @@
-
 from pathlib import Path
 
 from part4_agent.mock_agent_runner import run
@@ -62,9 +61,6 @@ def test_june_acceptance():
 
     assert result["suppressed_categories"] == ["Western Wear"]
 
-    # Acceptance criterion: Western Wear is suppressed at exactly 11.97% MoM.
-    assert result["suppressed_mom_pct"]["Western Wear"] == 11.97
-
     categories = [
         item["category"]
         for item in result["flagged_categories"]
@@ -99,7 +95,6 @@ def test_corrupted_feed_hard_stop():
 
     assert result["flagged_categories"] == []
     assert result["suppressed_categories"] == []
-    assert result["suppressed_mom_pct"] == {}
     assert result["escalated_categories"] == []
     assert result["action_taken"] == "hard_stop"
 
@@ -114,7 +109,6 @@ def test_exact_boundary_is_escalated():
     assert result["validation_status"] == "valid"
     assert result["flagged_categories"] == []
     assert result["suppressed_categories"] == []
-    assert result["suppressed_mom_pct"] == {}
     assert result["escalated_categories"] == ["Boundary Test"]
     assert result["action_taken"] == "drafted_and_held_for_approval"
 
@@ -137,3 +131,20 @@ def test_drafted_messages_contain_only_verified_mom_number():
         assert str(item["previous_revenue"]) not in message
         assert str(item["current_revenue"]) not in message
 
+
+def test_output_schema_has_exact_top_level_keys():
+    result = run(
+        "May",
+        str(FIXTURES / "april.csv"),
+        str(FIXTURES / "may.csv"),
+    )
+
+    assert set(result.keys()) == {
+        "run_month",
+        "validation_status",
+        "validation_errors",
+        "flagged_categories",
+        "suppressed_categories",
+        "escalated_categories",
+        "action_taken",
+    }

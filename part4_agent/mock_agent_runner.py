@@ -1,4 +1,3 @@
-
 import csv
 import json
 from pathlib import Path
@@ -54,7 +53,7 @@ def fill_prompt_template(
         f"{prev_month} to {month}.\n"
         f"FACT: {category} revenue changed by {mom_pct}% "
         f"from {prev_month} to {month}.\n"
-        f"Implication: ACTION: Review the category performanceand "
+        f"Implication: ACTION: Review the category performance and "
         f"identify the appropriate business action based on the verified "
         f"revenue movement."
     )
@@ -92,7 +91,6 @@ def run(
             "validation_errors": validation_errors,
             "flagged_categories": [],
             "suppressed_categories": [],
-            "suppressed_mom_pct": {},
             "escalated_categories": [],
             "action_taken": "hard_stop",
         }
@@ -196,14 +194,6 @@ def run(
         for item in remaining_flagged
     ]
 
-    # Keep the existing suppressed_categories contract as a list
-    # of category names, while also exposing the verified MoM value
-    # for acceptance checking and traceability.
-    suppressed_mom_pct = {
-        item["category"]: item["mom_pct"]
-        for item in remaining_flagged
-    }
-
     # ---------------------------------------------------------
     # 8. Emit structured result
     # ---------------------------------------------------------
@@ -214,7 +204,6 @@ def run(
         "validation_errors": [],
         "flagged_categories": flagged_categories,
         "suppressed_categories": suppressed_categories,
-        "suppressed_mom_pct": suppressed_mom_pct,
         "escalated_categories": escalated_categories,
         "action_taken": "drafted_and_held_for_approval",
     }
@@ -224,20 +213,63 @@ if __name__ == "__main__":
 
     project_root = Path(__file__).resolve().parent.parent
 
-    previous_csv = (
+    fixtures_dir = project_root / "part4_agent" / "fixtures"
+
+    corrupted_feed = (
         project_root
-        / "part1_sql"
-        / "output"
-        / "monthly_category_revenue.csv"
+        / "part2_engine"
+        / "fixtures"
+        / "corrupted_feed.csv"
     )
 
-    # This default demonstration uses the existing monthly feed.
-    # Specific May/June scenarios are tested separately.
-    result = run(
+    # ---------------------------------------------------------
+    # 1. May scenario: April -> May
+    # ---------------------------------------------------------
+
+    may_result = run(
         month="May",
-        previous_month_csv=str(previous_csv),
-        current_month_csv=str(previous_csv),
+        previous_month_csv=str(fixtures_dir / "april.csv"),
+        current_month_csv=str(fixtures_dir / "may.csv"),
     )
 
-    print(json.dumps(result, indent=2))
+    print("===== MAY SCENARIO: APRIL -> MAY =====")
+    print(json.dumps(may_result, indent=2))
 
+    # ---------------------------------------------------------
+    # 2. June scenario: May -> June
+    # ---------------------------------------------------------
+
+    june_result = run(
+        month="June",
+        previous_month_csv=str(fixtures_dir / "may.csv"),
+        current_month_csv=str(fixtures_dir / "june.csv"),
+    )
+
+    print("\n===== JUNE SCENARIO: MAY -> JUNE =====")
+    print(json.dumps(june_result, indent=2))
+
+    # ---------------------------------------------------------
+    # 3. Corrupted current-month feed: Hard Stop
+    # ---------------------------------------------------------
+
+    corrupted_result = run(
+        month="Corrupted Feed",
+        previous_month_csv=str(fixtures_dir / "may.csv"),
+        current_month_csv=str(corrupted_feed),
+    )
+
+    print("\n===== CORRUPTED FEED SCENARIO: HARD STOP =====")
+    print(json.dumps(corrupted_result, indent=2))
+
+    # ---------------------------------------------------------
+    # 4. Synthetic exact 8.00% boundary scenario
+    # ---------------------------------------------------------
+
+    boundary_result = run(
+        month="Boundary Test",
+        previous_month_csv=str(fixtures_dir / "boundary_previous.csv"),
+        current_month_csv=str(fixtures_dir / "boundary_current.csv"),
+    )
+
+    print("\n===== EXACT 8.00% BOUNDARY SCENARIO =====")
+    print(json.dumps(boundary_result, indent=2))
